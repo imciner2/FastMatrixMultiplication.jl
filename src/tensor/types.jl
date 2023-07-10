@@ -19,22 +19,3 @@ struct TensorFMMAlgorithm
     m::Int
     p::Int
 end
-
-"""
-    TensorFMMAlgorithm( U, W, V )
-"""
-function TensorFMMAlgorithm( U, W, V )
-    # Determine the size of the matrices being multiplied
-    n = size( U, 1 )
-    m = size( V, 1 )
-    p = size( W, 1 )
-
-    return TensorFMMAlgorithm( U, W, V, n, m, p )
-end
-
-import LinearAlgebra: rank
-
-"""
-    rank( tfmm::TensorFMMAlgorithm )
-"""
-rank( tfmm::TensorFMMAlgorithm ) = size( tfmm.W, 2 )
