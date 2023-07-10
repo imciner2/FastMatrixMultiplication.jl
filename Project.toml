@@ -3,5 +3,8 @@ uuid = "e063d41f-d799-4540-bacd-846b13f09013"
 authors = ["Ian McInerney <i.mcinerney17@imperial.ac.uk> and contributors"]
 version = "0.1.0-DEV"
 
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
 [compat]
 julia = "1.6"
