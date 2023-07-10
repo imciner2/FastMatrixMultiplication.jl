@@ -70,7 +70,7 @@ function _adder_chain( u, varname::String, isarray::Bool )
         if isone( abs( val ) )
             varScaled = indexpr
         else
-            varScaled = :($val * $indexpr)
+            varScaled = :($(abs(val)) * $indexpr)
         end
 
         isneg = signbit( val )
