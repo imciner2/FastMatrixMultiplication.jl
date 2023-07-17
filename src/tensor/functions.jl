@@ -28,8 +28,7 @@ function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
         Aadder = _adder_chain( u, "Ap", true )
         Badder = _adder_chain( tfmm.V[:,i], "Bp", true )
 
-        mname = Symbol( "m$i" )
-        push!( partial, :($mname = $Aadder * $Badder) )
+        push!( partial, _partial_product( Aadder, Badder, i ) )
     end
 
     # Form the final additions
@@ -49,6 +48,16 @@ function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
     funcbody = Expr( :block, init, partials, finals, returns )
 
     Expr( :function, funcsig, funcbody )
+end
+
+function _partial_product( u, v, varnum::Int )
+    mname = Symbol( "m$varnum" )
+
+    if ( u == :() ) || ( v == :() )
+        return :($mname = 0)
+    end
+
+    return :($mname = $u * $v)
 end
 
 function _adder_chain( u, varname::String, isarray::Bool )
