@@ -91,5 +91,5 @@ function _adder_chain( u, varname::String, isarray::Bool )
         end
     end
 
-    return adder
+    return isnothing( adder ) ? :() : adder
 end

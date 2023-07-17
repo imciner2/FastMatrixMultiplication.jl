@@ -9,6 +9,16 @@ const FMM = FastMatrixMultiplication
 ##############################################
 x = [1 2 3 4 5]
 
+@testset "Empty values" begin
+    # Test addition with positives
+    u = [0 0 0 0 0]
+    exp = FMM._adder_chain( u, "x", true )
+    @test exp == :()
+
+    exp = FMM._adder_chain( u, "x", false )
+    @test exp == :()
+end
+
 @testset "Array adder chain - one" begin
     # Test addition with positives
     u = [1  1  1  1  1]
@@ -153,7 +163,7 @@ x3 = 3
 x4 = 4
 x5 = 5
 
-@testset "Variable adder chain" begin
+@testset "Variable adder chain - one" begin
     # Test addition with positives
     u = [1  1  1  1  1]
     exp = FMM._adder_chain( u, "x", false )
