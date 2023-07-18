@@ -3,6 +3,11 @@ using SafeTestsets
 using Test
 
 @testset "FastMatrixMultiplication.jl" begin
+
+    @testset "Tensor algorithm type" begin
+        @safetestset "Type creation" begin include( "tensor/type/creation.jl" ) end
+    end
+
     @testset "Function formation" begin
         @safetestset "Adder chain" begin include( "tensor/adder_chain.jl" ) end
         @safetestset "Partial product" begin include( "tensor/partial_product.jl" ) end
