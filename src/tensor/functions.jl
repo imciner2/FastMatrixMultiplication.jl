@@ -9,12 +9,24 @@ macro generate_fastmatmul( alg, name, type )
     end
 end
 
-
 """
     _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
 """
 function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
-    # Initial part of the function is transforming to row-linear ordering
+    # Function signature
+    funcsig  = :( $(Symbol(name))( A::Matrix{T}, B::Matrix{T} ) where {T <: $T} )
+
+    # Create the main math portion and the return statement
+    mathexpr = _generate_fastmatmul_expr( tfmm, T )
+    returns  = Expr( :block, :(return C) )
+
+    # Assemble the function for the multiplication
+    funcbody = Expr( :block, mathexpr, returns )
+    Expr( :function, funcsig, funcbody )
+end
+
+function _generate_fastmatmul_expr( tfmm::TensorFMMAlgorithm, T )
+    # Transform the matrices to row-linear ordering
     init = quote
                 C = Matrix{$(T)}(undef, $(tfmm.n), $(tfmm.p) )
                 Ap = PermutedDimsArray( A, (2, 1) )
@@ -41,13 +53,9 @@ function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
 
     partials = Expr( :block, partial...)
     finals   = Expr( :block, final...)
-    returns  = Expr( :block, :(return C) )
 
-    # Assemble the function for the multiplication
-    funcsig  = :( $(Symbol(name))( A::Matrix{T}, B::Matrix{T} ) where {T <: $T} )
-    funcbody = Expr( :block, init, partials, finals, returns )
-
-    Expr( :function, funcsig, funcbody )
+    # Form the full math expression
+    Expr( :block, init, partials, finals )
 end
 
 function _partial_product( u, v, varnum::Int )
