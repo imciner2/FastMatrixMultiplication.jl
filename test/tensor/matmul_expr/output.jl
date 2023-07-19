@@ -12,7 +12,7 @@ A = [1 2;
 B = A
 
 # This algorithm is equivalent to an elementwise product
-eval( FMM._generate_fastmatmul_expr( Test2x2x2, Float64 ) )
+eval( FMM._generate_fastmatmul_expr( Test2x2x2 ) )
 
 # Verify partial products are mapped to correct elements of the output
 @test C[1,1] ≈ m1
@@ -21,7 +21,7 @@ eval( FMM._generate_fastmatmul_expr( Test2x2x2, Float64 ) )
 @test C[2,2] ≈ m4
 
 # This algorithm is equivalent to an elementwise product, but flipped
-eval( FMM._generate_fastmatmul_expr( Test2x2x2mix, Float64 ) )
+eval( FMM._generate_fastmatmul_expr( Test2x2x2mix ) )
 
 # Verify partial products are using the correct columns of the tensors
 @test C[1,1] ≈ m4

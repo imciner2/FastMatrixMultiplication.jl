@@ -12,7 +12,7 @@ A = [1 2;
 B = A
 
 # This algorithm is equivalent to an elementwise product
-eval( FMM._generate_fastmatmul_expr( Test2x2x2, Float64 ) )
+eval( FMM._generate_fastmatmul_expr( Test2x2x2 ) )
 
 # Should generate 4 partial products
 @test @isdefined m1
@@ -32,7 +32,7 @@ res = A.*A
 A = fill( 1, (3,2) )
 B = fill( 2, (2,2) )
 
-eval( FMM._generate_fastmatmul_expr( Test3x2x2, Float64 ) )
+eval( FMM._generate_fastmatmul_expr( Test3x2x2 ) )
 
 # Should generate 8 partial products
 @test @isdefined m1

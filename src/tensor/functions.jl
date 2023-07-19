@@ -12,14 +12,14 @@ macro generate_fastmatmul( alg, name, type )
 end
 
 """
-    _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
+    _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String; etype = Float64 )
 """
-function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
+function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String; etype = Float64 )
     # Function signature
-    funcsig  = :( $(Symbol(name))( A::Matrix{T}, B::Matrix{T} ) where {T <: $T} )
+    funcsig  = :( $(Symbol(name))( A::Matrix{T}, B::Matrix{T} ) where {T <: $etype} )
 
     # Create the main math portion and the return statement
-    mathexpr = _generate_fastmatmul_expr( tfmm, T )
+    mathexpr = _generate_fastmatmul_expr( tfmm, etype = etype )
     returns  = Expr( :block, :(return C) )
 
     # Assemble the function for the multiplication
@@ -27,10 +27,10 @@ function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String, T )
     Expr( :function, funcsig, funcbody )
 end
 
-function _generate_fastmatmul_expr( tfmm::TensorFMMAlgorithm, T )
+function _generate_fastmatmul_expr( tfmm::TensorFMMAlgorithm; etype = Float64 )
     # Transform the matrices to row-linear ordering
     init = quote
-                C = Matrix{$(T)}(undef, $(tfmm.n), $(tfmm.p) )
+                C = Matrix{$(etype)}(undef, $(tfmm.n), $(tfmm.p) )
                 Ap = PermutedDimsArray( A, (2, 1) )
                 Bp = PermutedDimsArray( B, (2, 1) )
                 Cp = PermutedDimsArray( C, (2, 1) )
