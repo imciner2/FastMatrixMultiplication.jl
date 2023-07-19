@@ -1,4 +1,8 @@
+# SPDX-License-Identifier: MIT
+
 import LinearAlgebra: rank
+
+export opcount
 
 """
     rank( tfmm::TensorFMMAlgorithm )

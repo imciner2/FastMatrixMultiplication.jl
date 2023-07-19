@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: MIT
 
+export @generate_fastmatmul
+
 """
     @generate_fastmatmul alg name type
 """
