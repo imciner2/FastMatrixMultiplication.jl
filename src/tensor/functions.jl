@@ -5,32 +5,27 @@ export @generate_fastmatmul
 """
     @generate_fastmatmul alg name type
 """
-macro generate_fastmatmul( alg, name, type )
-    return quote
-        eval( _generate_fastmatmul( $alg, $name, $type ) )
-    end
-end
+macro generate_fastmatmul( alg, name, args... )
+    tfmm = __module__.eval( alg )
 
-"""
-    _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String; etype = Float64 )
-"""
-function _generate_fastmatmul( tfmm::TensorFMMAlgorithm, name::String; etype = Float64 )
+    etype = isempty( args ) ? Number : args[1]
+
     # Function signature
-    funcsig  = :( $(Symbol(name))( A::Matrix{T}, B::Matrix{T} ) where {T <: $etype} )
+    funcsig  = esc( :( $(Symbol(name))( A::Matrix{T}, B::Matrix{T} ) where {T <: $etype} ) )
 
     # Create the main math portion and the return statement
-    mathexpr = _generate_fastmatmul_expr( tfmm, etype = etype )
-    returns  = Expr( :block, :(return C) )
+    mathexpr = esc( _generate_fastmatmul_expr( tfmm ) )
+    returns  = Expr( :block, esc( :(return C) ) )
 
     # Assemble the function for the multiplication
     funcbody = Expr( :block, mathexpr, returns )
     Expr( :function, funcsig, funcbody )
 end
 
-function _generate_fastmatmul_expr( tfmm::TensorFMMAlgorithm; etype = Float64 )
+function _generate_fastmatmul_expr( tfmm::TensorFMMAlgorithm )
     # Transform the matrices to row-linear ordering
     init = quote
-                C = Matrix{$(etype)}(undef, $(tfmm.n), $(tfmm.p) )
+                C = Matrix{T}(undef, $(tfmm.n), $(tfmm.p) )
                 Ap = PermutedDimsArray( A, (2, 1) )
                 Bp = PermutedDimsArray( B, (2, 1) )
                 Cp = PermutedDimsArray( C, (2, 1) )

@@ -18,5 +18,10 @@ using Test
             @safetestset "Partial products" begin include( "tensor/matmul_expr/partial_products.jl" ) end
             @safetestset "Output results" begin include( "tensor/matmul_expr/output.jl" ) end
         end
+
+        @testset "Function wrapping" begin
+            @safetestset "Existence" begin include( "tensor/matmul_func/existence.jl" ) end
+            @safetestset "Usage" begin include( "tensor/matmul_func/usage.jl" ) end
+        end
     end
 end

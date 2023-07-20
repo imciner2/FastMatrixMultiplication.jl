@@ -4,11 +4,13 @@ using Test
 
 const FMM = FastMatrixMultiplication
 
-include( "sample_algs.jl" )
+include( "../helpers/sample_algs.jl" )
 
 # 2x2 output matrix
 A = fill( 1, (2,2) )
 B = fill( 2, (2,2) )
+
+T = Float64
 
 eval( FMM._generate_fastmatmul_expr( Test2x2x2 ) )
 @test size(C) == (2,2)

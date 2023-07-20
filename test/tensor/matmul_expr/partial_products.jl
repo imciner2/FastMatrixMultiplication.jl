@@ -4,7 +4,7 @@ using Test
 
 const FMM = FastMatrixMultiplication
 
-include( "sample_algs.jl" )
+include( "../helpers/sample_algs.jl" )
 
 # 2x2 output matrix
 A = [1 2;
@@ -12,6 +12,7 @@ A = [1 2;
 B = A
 
 # This algorithm is equivalent to an elementwise product
+T = Float64
 eval( FMM._generate_fastmatmul_expr( Test2x2x2 ) )
 
 # Should generate 4 partial products
